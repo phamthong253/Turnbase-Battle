@@ -3,13 +3,23 @@ using UnityEngine;
 
 public class WaveText : MonoBehaviour
 {
+    public static WaveText Instance { get; private set; }
     public TextMeshProUGUI waveText;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        waveText.text = "Wave " + WaveScene.Instance.currentWave + " / " + WaveScene.Instance.maxWave;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
-
-    // Update is called once per frame
-    
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public void UpdateWaveText(int currentStage, int MaxStage)
+    {
+        waveText.text = "Wave " + currentStage + " / " + MaxStage;
+    }
 }

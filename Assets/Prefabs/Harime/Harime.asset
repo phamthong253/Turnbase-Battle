@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
+  m_Name: Harime
+  m_EditorClassIdentifier: 
+  name: Harime
+  hp: 100
+  maxHP: 30
+  mp: 40
+  maxMP: 50
+  armor: 10
+  damage: 21
+  magicDamage: 5
+  level: 99
+  attackSpeed: 6
+  attackType: 0
+  attackRange: 10
+  avatar: {fileID: -5834059608832515718, guid: 3bd16c615c54dac448b354b14daef61e, type: 3}
+  projectilePrefab: {fileID: 0}

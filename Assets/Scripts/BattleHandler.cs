@@ -1,215 +1,321 @@
-﻿    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using Unity.VisualScripting;
-    using UnityEngine;
-    using UnityEngine.SceneManagement;
-    using Random = UnityEngine.Random;
+﻿using UnityEngine;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Collections;
+using UnityEngine.Playables;
+using static UnityEngine.EventSystems.EventTrigger;
 
-    public enum BattleState
+/// <summary>
+/// Quản lý một trận chiến thời gian thực duy nhất.
+/// VAI TRÒ ĐÃ ĐƯỢC ĐƠN GIẢN HÓA: không còn quản lý lượt đi (turn-based).
+/// Nhiệm vụ chính là khởi tạo các yếu tố của trận đấu (như HUD) khi được WaveScene ra lệnh,
+/// và dọn dẹp khi trận đấu kết thúc.
+/// </summary>
+public class BattleHandler : MonoBehaviour
+{
+    public Transform teamFollowTarget;
+    // Singleton instance
+    [Header("UI Prefabs & References")]
+    [Tooltip("Kéo Prefab của BattleHUD dành cho Enemy vào đây")]
+    public GameObject enemyHUDPrefab;
+    [Tooltip("Kéo Prefab của BattleHUD dành cho Player vào đây")]
+    public GameObject playerHUDPrefab; // Đổi thành Prefab để có thể tạo cho nhiều player
+    public GameObject summonHUDPrefab; // Prefab dành cho SummonUnit, nếu cần thiết
+    public Transform playerHUDContainer;
+    public GameObject damagePopup;
+    public Dictionary<UnitController, BattleHUD> hudMap = new Dictionary<UnitController, BattleHUD>();
+
+    // Danh sách các unit đang tham chiến
+    private List<UnitController> playerTeam;
+    private List<UnitController> enemyTeam;
+    private List<BattleHUD> activePlayerHUDs = new List<BattleHUD>();
+    private List<BattleHUD> activeEnemyHUDs = new List<BattleHUD>();
+    private bool isBattleActive = false;
+    private bool isPlayerHudInitialized = false;
+
+    // Giữ lại danh sách này để có thể quản lý và dọn dẹp HUD khi hết wave
+    public Transform playerTeamAnchor;
+    public float teamSpeed = 15f; // Tốc độ di chuyển của team player
+    public float engageDistance = 5f; // Khoảng cách để các unit của player có thể tham gia trận chiến
+    public bool isTeamAdvance = false;
+    /// <summary>
+    /// Được gọi bởi WaveScene để bắt đầu một trận chiến mới.
+    /// </summary>
+    /// <param name="players">Danh sách unit của người chơi.</param>
+    /// <param name="enemies">Danh sách unit của kẻ địch vừa được spawn.</param>
+    /// 
+    // --- CÁC HÀM ĐIỀU KHIỂN CHÍNH ---
+
+    /// <summary>
+    /// Được gọi MỘT LẦN bởi WaveScene khi bắt đầu màn chơi.
+    /// </summary>
+    public void InitializeBattle(List<UnitController> players)
     {
-        START,
-        PLAYERTURN,
-        ENEMYTURN,
-        NEXTWAVE,
-        WON,
-        LOST
+        if(isPlayerHudInitialized) return; // Tránh khởi tạo lại nếu đã có
+        this.playerTeam = players;
+        foreach(var player in playerTeam)
+        {
+            player.InitializeStatsFromSO();
+        }
+        SetupPlayerHUDs(); // Chỉ tạo HUD cho player ở đây
+        isPlayerHudInitialized = true; // Đánh dấu là đã khởi tạo HUD cho player
     }
-    public class BattleHandler : MonoBehaviour
+    /// <summary>
+    /// Được gọi MỖI KHI có một wave mới bắt đầu.
+    /// </summary>
+    public void StartWave(List<UnitController> enemies)
     {
-        public GameObject playerPrefab;
-        public GameObject[] enemyPrefab;
-        private List<UnitController> listEnemy = new List<UnitController>();
-        private List<BattleHUD> listEnemyHUD = new List<BattleHUD>();
+        this.enemyTeam = new List<UnitController>(enemies);
 
-        GameObject player, enemy;
+        ClearEnemyHUDs();   // Dọn dẹp HUD của enemy từ wave trước
+        SetupEnemyHUDs();   // Tạo HUD mới cho enemy của wave này
 
-        public Transform playerBattleStation, enemyBattleStation;
-
-        public BattleState state;
-        public BattleHUD playerHUD;
-        public BattleHUD enemyHUD;
-        UnitController playerController, enemyController;
-
-        private void Start()
+        isBattleActive = true;
+        foreach (var player in playerTeam)
         {
-            state = BattleState.START;
-            StartCoroutine(SetupBattle());
-        }
-        private IEnumerator SetupBattle()
-        {
-            player = Instantiate(playerPrefab, playerBattleStation.position, Quaternion.identity);
-            playerController = player.GetComponent<UnitController>();
-            SpawnEnemy();
-            yield return new WaitForSeconds(0.1f);
-            StartCoroutine(playerHUD.StartHUD(playerHUD, playerController));
-            for (int i = 0; i < listEnemy.Count; i++)
-            {
-                StartCoroutine(listEnemyHUD[i].StartHUD(listEnemyHUD[i], listEnemy[i]));
-            }
-
-            state = BattleState.PLAYERTURN;
-            PlayerTurn();
-        }
-
-        private void Update()
-        {
-            switch (state)
-            {
-                case BattleState.START:
-                    break;
-                case BattleState.PLAYERTURN:
-                    break;
-                case BattleState.ENEMYTURN:
-                    break;
-                case BattleState.NEXTWAVE:
-                    break;
-                case BattleState.WON:
-                    break;
-                case BattleState.LOST:
-                    break;
-            }
-        }
-    void SpawnEnemy()
-    {
-        listEnemyHUD.Clear();
-        listEnemy.Clear();
-
-        int enemyCount = WaveScene.Instance.GetEnemyCountForWave();
-        WaveScene.Instance.enemySpawnedSoFar += enemyCount; // Cập nhật số lượng enemy đã spawn
-        if (enemyCount <= 0) return;
-
-        float spacingX = 6f, spacingY = 5f;
-        int numRows = Mathf.CeilToInt(enemyCount / 2f);
-        int enemySpawned = 0;
-
-        for (int row = 0; row < numRows && enemySpawned < enemyCount; row++)
-        {
-            int enemiesInRow = Mathf.Min(2, enemyCount - enemySpawned);
-            float startX = -((enemiesInRow - 1) * spacingX) / 2;
-
-            for (int col = 0; col < enemiesInRow && enemySpawned < enemyCount; col++)
-            {
-                // Tính toán vị trí
-                Vector3 enemyPos = enemyBattleStation.position + new Vector3(startX + col * spacingX, -row * spacingY, -1);
-
-                // Tạo enemy và gán vào danh sách
-                GameObject enemyGO = Instantiate(enemyPrefab[Random.Range(0, enemyPrefab.Length)], enemyPos, Quaternion.identity);
-                UnitController enemyUnit = enemyGO.GetComponent<UnitController>();
-                listEnemy.Add(enemyUnit);
-
-                // Tạo HUD
-                BattleHUD newEnemyHUD = Instantiate(enemyHUD);
-                newEnemyHUD.isEnemyHUD = true;
-                newEnemyHUD.transform.SetParent(GameObject.Find("Canvas").transform, false);
-                newEnemyHUD.StartHUD(newEnemyHUD, enemyUnit);
-                newEnemyHUD.SetTarget(enemyUnit.transform);
-                listEnemyHUD.Add(newEnemyHUD);
-
-                enemySpawned++;
-            }
-        }
-
-        // Đặt enemyController mặc định (nếu có ít nhất 1 enemy)
-        if (listEnemy.Count > 0)
-        {
-            enemyController = listEnemy[0];
+            player.UpdateTeamAnchor(this.playerTeamAnchor);
         }
     }
 
-
-    void PlayerTurn()
+    // <summary>
+    /// Chỉ tạo và thiết lập HUD cho đội người chơi.
+    /// </summary>
+    private void SetupPlayerHUDs()
+    {
+        if (playerHUDPrefab == null || playerHUDContainer == null) return;
+        activePlayerHUDs.Clear(); // Dọn dẹp container trước khi thêm HUD mới
+        foreach (var player in playerTeam)
         {
-            state = BattleState.PLAYERTURN;
-
-            for (int i = 0; i < listEnemy.Count; i++)
+            GameObject hudObj = Instantiate(playerHUDPrefab, playerHUDContainer);
+            BattleHUD newPlayerHUD = hudObj.GetComponent<BattleHUD>();
+            SkillButtonHandler skillButtonHandler = hudObj.GetComponent<SkillButtonHandler>();
+            if (newPlayerHUD != null)
             {
-                listEnemyHUD[i].UpdateHUD(listEnemy[i]);
-            }
-            playerController.AttackTurn(enemyController, () =>
-            {
-                if (enemyController.currentHealth <= 0)
-                {
-                    int index = listEnemy.IndexOf(enemyController);
-                    if (index >= 0)
-                    {
-                        Destroy(listEnemyHUD[index].gameObject); // Xóa enemyHUD tương ứng
-                        listEnemyHUD.RemoveAt(index); // Xóa enemyHUD tương ứng
-                        listEnemy.Remove(enemyController);  // Xóa enemy đã chết khỏi danh sách
-                    }
-                    enemyController.Delete();
-                    WaveScene.Instance.enemyKilled++; // Cập nhật số lượng enemy đã bị tiêu diệt
-                    Debug.Log("Enemy killed: " + WaveScene.Instance.enemyKilled);
-                    if (listEnemy.Count == 0)
-                    {
-                        if (WaveScene.Instance.enemyKilled >= WaveScene.Instance.totalEnemyInPool)
-                        {
-                            state = BattleState.WON;
-                            EndBattle();
-                        }
-                        else { 
-                        state = BattleState.NEXTWAVE;
-                        WaveScene.Instance.NextWave();
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        enemyController = listEnemy[0]; // Chọn enemy tiếp theo làm mục tiêu
-                    }
-                }
-                state = BattleState.ENEMYTURN;
-                StartCoroutine(EnemyTurn());
-            });
-        }
-        IEnumerator EnemyTurn()
-        {
-            Debug.Log("Enemy turn");
-            foreach (UnitController enemy in listEnemy)
-            {
-                if (enemy.currentHealth > 0) // Kiểm tra nếu enemy còn sống mới tấn công
-                {
-                    bool isTurnFinished = false;
-                    enemy.AttackTurn(playerController, () =>
-                    {
-                        isTurnFinished = true;
-                        // Cập nhật HUD sau mỗi lượt tấn công
-                        playerHUD.UpdateHUD(playerController);
-                    });
-                    yield return new WaitUntil(() => isTurnFinished);
-                }
-            }
-
-            if (playerController.currentHealth <= 0)
-            {
-                state = BattleState.LOST;
-                playerController.Delete();
-                EndBattle();
+                newPlayerHUD.isEnemyHUD = false; // Đảm bảo HUD này biết nó là của Player
+                newPlayerHUD.LinkToUnit(player, this.damagePopup);
+                skillButtonHandler.LinkToSkill(player); // Liên kết SkillButtonHandler với UnitController
+                activePlayerHUDs.Add(newPlayerHUD);
             }
             else
             {
-                // Cập nhật toàn bộ danh sách enemy HUD sau lượt tấn công
-                for (int i = 0; i < listEnemy.Count; i++)
-                {
-                    listEnemyHUD[i].UpdateHUD(listEnemy[i]);
-                }
-
-
-                state = BattleState.PLAYERTURN;
-                PlayerTurn();
-            }
-        }
-            void EndBattle()
-        {
-            if (state == BattleState.WON)
-            {
-                Debug.Log("You won the battle!");
-                WaveScene.Instance.DisplayWinnerUI();
-
-        }
-            else if (state == BattleState.LOST)
-            {
-                Debug.Log("You lost the battle!");
+                Debug.Log("PlayerHUD không tìm thấy BattleHUD component trong prefab!");
             }
         }
     }
+
+    /// <summary>
+    /// Chỉ tạo và thiết lập HUD cho đội kẻ địch.
+    /// </summary>
+    private void SetupEnemyHUDs()
+    {
+        foreach (var enemy in enemyTeam)
+        {
+            GameObject hudObj = Instantiate(enemyHUDPrefab);
+            BattleHUD newEnemyHUD = hudObj.GetComponent<BattleHUD>();
+            newEnemyHUD.transform.SetParent(GameObject.Find("Canvas").transform, false); // Đặt HUD vào Canvas chính
+            if (newEnemyHUD != null)
+            {
+                newEnemyHUD.isEnemyHUD = true; // Đảm bảo HUD này biết nó là của Enemy
+                newEnemyHUD.LinkToUnit(enemy, this.damagePopup);
+                newEnemyHUD.SetTargetToFollow(enemy.transform);
+                activeEnemyHUDs.Add(newEnemyHUD);
+            }
+        }
+    }
+
+    private void Update()
+    {
+        Debug.Log("BattleHandler Update: Đang quét chiến trường...");
+        if (!isBattleActive)
+        {
+            Debug.Log("BattleHandler Update: Trận đấu không hoạt động.");
+            return; // Không làm gì nếu trận đấu không hoạt động
+        }
+        RemoveDeadUnits(playerTeam);
+        RemoveDeadUnits(enemyTeam); // Loại bỏ các unit đã chết khỏi danh sách
+        // Kiểm tra điều kiện kết thúc trận đấu
+        if (enemyTeam.Count == 0 || playerTeam.Count == 0)
+        {
+            isBattleActive = false; // Kết thúc trận đấu nếu không còn kẻ địch hoặc người chơi
+            return;
+        }
+        AssignTarget(playerTeam, enemyTeam);
+        AssignTarget(enemyTeam, playerTeam);
+    }
+
+    private void OnEnable()
+    {
+        Debug.Log("<color=yellow>BattleHandler: Đã bật 'máy nghe' sự kiện unit bị hạ.</color>");
+        UnitController.OnUnitDestroyed += HandleUnitDestroyed;
+    }
+    private void OnDisable()
+    {
+        UnitController.OnUnitDestroyed -= HandleUnitDestroyed;
+    }
+
+    public void HandleUnitDestroyed(UnitController unit)
+    {
+        if(!unit.isPlayerUnit && isBattleActive)
+        {
+            StartCoroutine(CheckAdvanceFrontLine());
+        }
+    }
+    /// Coroutine này sẽ kiểm tra và cập nhật vị trí tiến lên của đội hình player
+    private IEnumerator CheckAdvanceFrontLine()
+    {
+        if(isTeamAdvance) yield break; // Nếu đã đang tiến lên, không làm gì cả
+        isTeamAdvance = true; // Đánh dấu là đang tiến lên
+        yield return null;
+        // Tính toán khoảng cách từ vị trí hiện tại của đội hình đến vị trí của kẻ địch gần nhất
+        UnitController newTargetClosest = FindClosestOpponent(playerTeamAnchor, enemyTeam);
+
+        if (newTargetClosest == null)
+        {
+            isTeamAdvance = false; // Kết thúc quá trình tiến lên
+            yield break; // Kết thúc Coroutine nếu không có kẻ địch
+        }
+        // Tính toán khoảng cách cần di chuyển
+        Vector3 enemyClosestPos = newTargetClosest.transform.position;
+        Vector3 desiredPlayerPos = enemyClosestPos - new Vector3(engageDistance, 0, 0); // Giả sử đội hình player sẽ đứng ngang hàng với kẻ địch
+        // Di chuyển đội hình player về vị trí mới
+        while (Vector3.Distance(playerTeamAnchor.position, desiredPlayerPos) > 0.1f)
+        {
+            
+            playerTeamAnchor.position = Vector3.MoveTowards(playerTeamAnchor.position, desiredPlayerPos, teamSpeed * Time.deltaTime);
+            yield return null; // Chờ frame tiếp theo
+        }
+        isTeamAdvance = false; // Kết thúc quá trình tiến lên
+    }
+    private void AssignTarget(List<UnitController> allies, List<UnitController> opponent) {
+        foreach (var unit in allies)
+        {
+            if(unit.GetCurrentTarget() == null || unit.GetCurrentTarget().currentHealth <= 0)
+            {
+                // Tìm kiếm kẻ địch còn sống để gán làm mục tiêu
+                UnitController newTarget = FindClosestOpponent(unit.transform, opponent);
+                unit.SetTarget(newTarget);
+            }
+        }
+    }
+    UnitController FindClosestOpponent(Transform attacker,List<UnitController> opponents) {
+        UnitController closest = null;
+        float minDistance = float.MaxValue;
+        foreach (var opponent in opponents)
+        {
+            // Chỉ xem xét những đối thủ còn sống và tồn tại
+            if (opponent != null && !opponent.isDestroyed)
+            {
+                // Tính khoảng cách từ vị trí "fromTransform" được truyền vào
+                float distance = Vector3.Distance(attacker.position, opponent.transform.position);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closest = opponent;
+                }
+            }
+        }
+        return closest; // Trả về kẻ địch gần nhất còn sống
+    }
+    /// <summary>
+    /// Được gọi khi trận đấu kết thúc (ví dụ bởi WaveScene) để ẩn và dọn dẹp UI.
+    /// </summary>
+    
+
+    /// <summary>
+    /// Tạo và thiết lập HUD cho tất cả kẻ địch trong wave.
+    /// </summary>
+
+    /// <summary>
+    /// Phá hủy tất cả HUD của kẻ địch từ wave trước.
+    /// </summary>
+    private void ClearEnemyHUDs()
+    {
+        foreach (var hud in activeEnemyHUDs)
+        {
+            if (hud != null) Destroy(hud.gameObject);
+        }
+        activeEnemyHUDs.Clear();
+    }
+
+    private void RemoveDeadUnits(List<UnitController> unitList)
+    {
+        // Tạo danh sách các unit đã chết hoặc null
+        var deadUnit = unitList.Where(u => u.isDestroyed || u == null).ToList();
+        //Lặp qua các unit đã chết và loại bỏ chúng khỏi danh sách
+        foreach (var unit in deadUnit)
+        {
+            if (hudMap.ContainsKey(unit))
+            {
+                if(hudMap[unit] != null)
+                {
+                    Destroy(hudMap[unit].gameObject); // Phá hủy HUD tương ứng
+                }
+                hudMap.Remove(unit); // Loại bỏ khỏi bản đồ HUD
+            }
+        }
+        unitList.RemoveAll(u => u.isDestroyed || u == null); // Loại bỏ các unit đã chết khỏi danh sách
+    }
+
+    public List<UnitController> GetOpponentListFor(UnitController unit)
+    {
+        return unit.isPlayerUnit ? enemyTeam : playerTeam;
+    }
+    public List<UnitController> GetAlliedListFor(UnitController unit)
+    {
+        return unit.isPlayerUnit ? playerTeam : enemyTeam;
+    }
+    public void RegisterNewUnit(UnitController newUnit)
+    {
+        // Có thể thêm logic để xử lý khi có unit mới tham gia trận đấu
+        if (newUnit == null) return;
+        if (newUnit.isPlayerUnit)
+        {
+            playerTeam.Add(newUnit);
+        }
+        else
+        {
+            enemyTeam.Add(newUnit);
+        }
+        Debug.Log("BattleHandler: Đăng ký một unit mới tham gia trận đấu.");
+        // ---- THAY ĐỔI LOGIC Ở ĐÂY ----
+        GameObject hudPrefabToUse = null;
+
+        if (newUnit.GetComponent<SummonUnit>() != null)
+        {
+            // Nếu là unit được triệu hồi, luôn dùng HUD đi theo
+            // Bạn có thể tạo summonHUDPrefab riêng hoặc tái sử dụng enemyHUDPrefab
+            hudPrefabToUse = summonHUDPrefab != null ? summonHUDPrefab : enemyHUDPrefab;
+        }
+        else
+        {
+            // Xử lý cho các trường hợp khác nếu cần
+        }
+
+        if (hudPrefabToUse == null)
+        {
+            Debug.LogError("Không có Prefab HUD phù hợp cho unit mới!");
+            return;
+        }
+        // Tạo HUD cho unit mới
+        GameObject hudObj = Instantiate(summonHUDPrefab);
+        BattleHUD newSummonUnitHUD = hudObj.GetComponent<BattleHUD>();
+        newSummonUnitHUD.transform.SetParent(GameObject.Find("Canvas").transform, false); // Đặt HUD vào Canvas chính
+        if (newSummonUnitHUD != null)
+        {
+            newSummonUnitHUD.LinkToUnit(newUnit, this.damagePopup);
+            newSummonUnitHUD.SetTargetToFollow(newUnit.transform); // Đặt mục tiêu theo dõi là unit mới
+            SummonUnit summonUnit = newUnit.GetComponent<SummonUnit>();
+            if(summonUnit != null)
+            {
+                summonUnit.summonUnitHUD = newSummonUnitHUD; // Liên kết HUD với SummonUnit nếu có
+                Debug.Log("Đã liên kết với summonUnit HUD ok");
+            }
+        }
+    }
+    public void EndBattle()
+    {
+        Debug.Log("BattleHandler: Dọn dẹp UI khi kết thúc trận đấu.");
+    }
+
+}

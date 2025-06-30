@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
+  m_Name: FallenAngel
+  m_EditorClassIdentifier: 
+  name: FallenAngel
+  hp: 100
+  maxHP: 50
+  mp: 50
+  maxMP: 100
+  armor: 10
+  damage: 15
+  magicDamage: 20
+  level: 99
+  attackSpeed: 2.5
+  attackType: 2
+  attackRange: 20
+  avatar: {fileID: -1676951649959379457, guid: 97bfc93c741ac6a41bf57f5db8b2947b, type: 3}
+  projectilePrefab: {fileID: 6701866281983643091, guid: 67de82af01e2ce04885a4f939a7eb089, type: 3}

@@ -33,7 +33,8 @@ Transform:
   m_LocalPosition: {x: 10, y: 0, z: -10}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7930685696997517301}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5249864845863354008
@@ -141,14 +142,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6349dad1822da2f48bbf479097788a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleHUD: {fileID: 0}
-  unitState: 0
+  characterID: 0
+  skillSO: {fileID: 0}
   unitSO: {fileID: 11400000, guid: 2864dd441d430e844b06c88377e106c6, type: 2}
   unitBase: {fileID: 2330776221667743343}
+  isPlayerUnit: 0
+  formationSlotIndex: 0
   currentHealth: 10
   currentMana: 10
   currentDamage: 1
   currentArmor: 1
+  isDestroyed: 0
+  fireTransform: {fileID: 7930685696997517301}
 --- !u!114 &2330776221667743343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +166,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c56ed94ce99ea1844a88aba86aa888ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5651849340189386597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7930685696997517301}
+  m_Layer: 0
+  m_Name: FireTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7930685696997517301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5651849340189386597}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0.7109591, w: -0.7032334}
+  m_LocalPosition: {x: -0.177, y: -0.013, z: -0.010264397}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5401065344328194157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -269.374}

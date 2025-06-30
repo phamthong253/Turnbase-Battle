@@ -1,16 +1,29 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using NUnit.Framework;
+using UnityEditor.Animations;
 using UnityEngine;
+using System.Linq;
 
 public class UnitBase : MonoBehaviour
 {
     private Animator animator;
     private Action onActionComplete;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+        if (animator == null)
+        {
+            // Thay GetComponent bằng GetComponentInChildren
+            // Nó sẽ tìm trên chính GameObject này, sau đó tìm xuống tất cả các con của nó.
+            animator = GetComponent<Animator>();
+        }
+    }
     void Start()
     {
-       animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
     }
     public void OnActionComplete()
@@ -22,6 +35,10 @@ public class UnitBase : MonoBehaviour
     }
     public void PlayAnimation(string AnimationName)
     {
+        if (animator == null)
+        {
+            return; // Không làm gì cả và thoát khỏi hàm để không bị lỗi
+        }
         animator.SetTrigger(AnimationName);
     }
     public void PlayForceAnimation(string AnimationName, Action onActionComplete)
@@ -32,7 +49,12 @@ public class UnitBase : MonoBehaviour
     }
     private IEnumerator WaitForAnimation(string AnimationName, Action onComplete)
     {
-        yield return new WaitForSeconds(0.5f);
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        while (stateInfo.normalizedTime < 1.0f)
+        {
+            yield return null; // Chờ cho đến khi animation kết thúc
+            stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        }
         onComplete?.Invoke();
     }
 }

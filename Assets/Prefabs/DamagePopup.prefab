@@ -289,6 +289,7 @@ MonoBehaviour:
   speed: 5
   fadeTime: 2.01
   prefab: {fileID: 7361366837903564013}
+  textDamage: {fileID: 1025494159740325090}
 --- !u!114 &729709427309280373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,4 +410,3 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  tmp: {fileID: 1025494159740325090}
