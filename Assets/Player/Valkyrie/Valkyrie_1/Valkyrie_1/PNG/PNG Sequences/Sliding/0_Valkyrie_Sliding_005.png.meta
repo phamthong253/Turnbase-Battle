@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      0_Valkyrie_Sliding_005_0: 4376108262231456718
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

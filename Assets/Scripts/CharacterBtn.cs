@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 // Gắn script này vào mỗi Button trong danh sách chọn tướng (ScrollView)
-public class CharacterBtn : MonoBehaviour
+public class CharacterBtn : MonoBehaviour, IPointerEnterHandler
 {
     [Tooltip("Kéo file asset UnitSO của tướng tương ứng vào đây")]
     public UnitSO characterData;
@@ -42,6 +43,13 @@ public class CharacterBtn : MonoBehaviour
         {
             // Gọi hàm trong controller và truyền dữ liệu của chính mình vào
             uiController.SelectUnitFromRoster(characterData);
+        }
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (uiController != null && characterData != null)
+        {
+            AudioManager.Instance.PlaySFX("selectionSound"); // Phát âm thanh khi hover vào nút
         }
     }
 }

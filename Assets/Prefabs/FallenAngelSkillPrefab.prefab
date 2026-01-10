@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5593930774002491386}
   - component: {fileID: 8893262090072771595}
   - component: {fileID: 6723451312560312196}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FallenAngelSkillPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

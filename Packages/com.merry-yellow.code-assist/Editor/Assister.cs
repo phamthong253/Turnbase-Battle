@@ -19,7 +19,7 @@ namespace Meryel.UnityCodeAssist.Editor
 {
     public class Assister
     {
-        public const string Version = "1.3.12"; //do NOT modify this line, except the number value, its being used by VSCode/Typescript for version detection (in exporter.ts.getVersionOfUnitySide())
+        public const string Version = "1.4.19"; //do NOT modify this line, except the number value, its being used by VSCode/Typescript for version detection (in exporter.ts.getVersionOfUnitySide())
 
 #if MERYEL_UCA_LITE_VERSION
         public const string Title = "Code Assist Lite";
@@ -442,9 +442,7 @@ namespace Meryel.UnityCodeAssist.Editor
         static void ReloadDomain()
         {
             EditorUtility.RequestScriptReload();
-
         }
-
 
         /*
         [MenuItem("Code Assist/TEST")]
@@ -473,15 +471,30 @@ namespace Meryel.UnityCodeAssist.Editor
             var tags = UnityEditorInternal.InternalEditorUtility.tags;
             MQTTnetInitializer.Publisher?.SendTags(tags);
 
-            var names = UnityEditorInternal.InternalEditorUtility.layers;
-            var indices = names.Select(l => LayerMask.NameToLayer(l).ToString()).ToArray();
-            MQTTnetInitializer.Publisher?.SendLayers(indices, names);
+            var layerNames = UnityEditorInternal.InternalEditorUtility.layers;
+            var layerIndices = layerNames.Select(l => LayerMask.NameToLayer(l).ToString()).ToArray();
+            MQTTnetInitializer.Publisher?.SendLayers(layerNames, layerIndices);
 
             var sls = SortingLayer.layers;
             var sortingNames = sls.Select(sl => sl.name).ToArray();
             var sortingIds = sls.Select(sl => sl.id.ToString()).ToArray();
             var sortingValues = sls.Select(sl => sl.value.ToString()).ToArray();
             MQTTnetInitializer.Publisher?.SendSortingLayers(sortingNames, sortingIds, sortingValues);
+
+#if UNITY_6000_0_OR_NEWER
+            // Version 6+ only, 2022.3 doesn't have class RenderingLayerMask, even though some renderingLayerMask fields/properties are declared
+
+            var renderingLayerCount = RenderingLayerMask.GetRenderingLayerCount();
+            var renderingLayerIndices = new string[renderingLayerCount];
+            var renderingLayerNames = new string[renderingLayerCount];
+            for (var i = 0; i < renderingLayerCount; i++)
+            {
+                renderingLayerIndices[i] = i.ToString();
+                renderingLayerNames[i] = RenderingLayerMask.RenderingLayerToName(i);
+            }
+            MQTTnetInitializer.Publisher?.SendRenderingLayers(renderingLayerNames, renderingLayerIndices);
+
+#endif // UNITY_6000_0_OR_NEWER
         }
 
         public static bool GetCodeEditor(bool checkVersion, out bool isVisualStudio, out bool isVisualStudioCode, out string? error)
@@ -517,13 +530,13 @@ namespace Meryel.UnityCodeAssist.Editor
                 var versionRegex = new System.Text.RegularExpressions.Regex(".*\\[([\\d\\.]+)\\]");
                 var versionStr = versionRegex.Match(installation.Name).Groups.ElementAtOrDefault(1)?.Value;
 
-                if (isVisualStudioCode && !string.IsNullOrEmpty(versionStr) && (versionCompare(versionStr!, "1.76") < 0))
+                if (isVisualStudioCode && !string.IsNullOrEmpty(versionStr) && (VersionCompare(versionStr!, "1.76") < 0))
                 {
                     error = $"Version {versionStr} of Visual Studio Code is not supported by Unity Code Assist. Please update Visual Studio Code";
                     return false;
                 }
 
-                if (isVisualStudio && !string.IsNullOrEmpty(versionStr) && (versionCompare(versionStr!, "17") < 0))
+                if (isVisualStudio && !string.IsNullOrEmpty(versionStr) && (VersionCompare(versionStr!, "17") < 0))
                 {
                     error = $"Version {versionStr} of Visual Studio is not supported by Unity Code Assist. Please update Visual Studio";
                     return false;
@@ -538,56 +551,58 @@ namespace Meryel.UnityCodeAssist.Editor
                 return false;
             }
 
-            //https://www.geeksforgeeks.org/compare-two-version-numbers/amp/
-            static int versionCompare(string v1, string v2)
+
+        }
+
+
+        //https://www.geeksforgeeks.org/compare-two-version-numbers/amp/
+        public static int VersionCompare(string v1, string v2)
+        {
+            // vnum stores each numeric
+
+            // part of version
+
+            int vnum1 = 0, vnum2 = 0;
+
+            // loop until both string are
+            // processed
+
+            for (int i = 0, j = 0; (i < v1.Length || j < v2.Length);)
+
             {
-                // vnum stores each numeric
-
-                // part of version
-
-                int vnum1 = 0, vnum2 = 0;
-
-                // loop until both string are
-                // processed
-
-                for (int i = 0, j = 0; (i < v1.Length || j < v2.Length);)
-
+                // storing numeric part of
+                // version 1 in vnum1
+                while (i < v1.Length && v1[i] != '.')
                 {
-                    // storing numeric part of
-                    // version 1 in vnum1
-                    while (i < v1.Length && v1[i] != '.')
-                    {
 
-                        vnum1 = vnum1 * 10 + (v1[i] - '0');
+                    vnum1 = vnum1 * 10 + (v1[i] - '0');
 
-                        i++;
-                    }
-                    // storing numeric part of
-
-                    // version 2 in vnum2
-
-                    while (j < v2.Length && v2[j] != '.')
-                    {
-                        vnum2 = vnum2 * 10 + (v2[j] - '0');
-                        j++;
-                    }
-                    if (vnum1 > vnum2)
-                        return 1;
-
-                    if (vnum2 > vnum1)
-                        return -1;
-
-                    // if equal, reset variables and
-
-                    // go for next numeric part
-                    vnum1 = vnum2 = 0;
                     i++;
+                }
+                // storing numeric part of
+
+                // version 2 in vnum2
+
+                while (j < v2.Length && v2[j] != '.')
+                {
+                    vnum2 = vnum2 * 10 + (v2[j] - '0');
                     j++;
                 }
+                if (vnum1 > vnum2)
+                    return 1;
 
-                return 0;
+                if (vnum2 > vnum1)
+                    return -1;
+
+                // if equal, reset variables and
+
+                // go for next numeric part
+                vnum1 = vnum2 = 0;
+                i++;
+                j++;
             }
 
+            return 0;
         }
 
     }

@@ -821,6 +821,8 @@ GameObject:
   - component: {fileID: -4820388084416668257}
   - component: {fileID: -5825295387957481886}
   - component: {fileID: 4212424474022373095}
+  - component: {fileID: 5692741213765627482}
+  - component: {fileID: 8501392420461546195}
   m_Layer: 0
   m_Name: Golem
   m_TagString: Untagged
@@ -920,6 +922,13 @@ MonoBehaviour:
   currentArmor: 0
   isDestroyed: 0
   fireTransform: {fileID: 6519271943450895733}
+  itemToDrop: {fileID: 0}
+  dropChance: 0
+  enhancedVfxTag: 
+  enhancedVfxDuration: 1
+  isCurrentlyEnhanced: 0
+  attackAudioClip: {fileID: 8300000, guid: 898afd02a9530ec4481135e537c64603, type: 3}
+  hitAudioClip: {fileID: 8300000, guid: 90ac573b1ddca4743974a8f7972df396, type: 3}
 --- !u!114 &4212424474022373095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,6 +942,69 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   summonUnitHUD: {fileID: 275577420699335981, guid: 73d132e46b90ca24882cb5d053d6bd7b, type: 3}
+--- !u!58 &5692741213765627482
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632069410589986}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.21649456, y: 2.0479083}
+  m_Radius: 1.9069328
+--- !u!50 &8501392420461546195
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632069410589986}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1724271570171508
 GameObject:
   m_ObjectHideFlags: 0

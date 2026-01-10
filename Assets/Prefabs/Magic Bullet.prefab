@@ -49,7 +49,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 6701866281983643091}
   m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
@@ -114,10 +114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7809a1cfabc27c418e60940686764a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLife: 1.5
   speed: 30
-  damageToDeal: 0
-  myTag: Magic Bullet
+  timeLife: 1.5
 --- !u!212 &1028591507243451839
 SpriteRenderer:
   m_ObjectHideFlags: 0

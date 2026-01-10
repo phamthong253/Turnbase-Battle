@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
   m_Name: Harime
   m_EditorClassIdentifier: 
+  unitID: 2
   name: Harime
   hp: 100
   maxHP: 30
@@ -22,7 +23,8 @@ MonoBehaviour:
   magicDamage: 5
   level: 99
   attackSpeed: 6
-  attackType: 0
+  attackType: 1
   attackRange: 10
+  comboThreshold: 3
   avatar: {fileID: -5834059608832515718, guid: 3bd16c615c54dac448b354b14daef61e, type: 3}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 6701866281983643091, guid: 4b960dabfdb828145bfecffa42df824b, type: 3}

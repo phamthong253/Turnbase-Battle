@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      0_Valkyrie_Run Slashing_003_0: 8046098907508317244
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

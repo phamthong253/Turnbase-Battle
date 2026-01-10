@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      0_Valkyrie_Idle_017_0: -4373846034561336134
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

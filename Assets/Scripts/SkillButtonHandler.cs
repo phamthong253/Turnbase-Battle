@@ -36,14 +36,14 @@ public class SkillButtonHandler : MonoBehaviour
 
     public void OnSkillButtonPressed()
     {
+        AudioManager.Instance.PlaySFX("skillSceneAudiostartBtn");
         if (uiManager == null)
         {
             return;
         }
-        if (caster.currentMana >= caster.skillSO.manaCost)
+        if (caster.currentMana >= caster.skillSO.manaCost && caster != null)
         {
             BindAndPlayTimeline();
-            UsePerformSkill();
         }
         else
         {
@@ -100,13 +100,16 @@ public class SkillButtonHandler : MonoBehaviour
 
             // 7. Rất quan trọng: Hủy đăng ký sự kiện để tránh gọi lại nhiều lần
             skillTimeline.stopped -= OnTimelineFinished;
+            UsePerformSkill();
 
-            // Tại đây bạn có thể thực hiện logic gây sát thương cuối cùng nếu muốn
         }
     }
     private void UsePerformSkill()
     {
         List<UnitController> currentTarget = SkillManager.Instance.GetTargets(caster.skillSO, caster);
+        CameraFocusManager.Instance.StartCoroutine(
+                CameraFocusManager.Instance.FocusOnSkillRoutine(caster,currentTarget)
+            );
         if(caster.skillSO == null)
         {
             Debug.LogError("SkillSO không được gán cho caster.");
@@ -123,14 +126,22 @@ public class SkillButtonHandler : MonoBehaviour
             Debug.LogError("Không tìm thấy UnitCastSkill trên caster.");
             return;
         }
+        if(currentTarget != null)
+        {
+            foreach(var target in currentTarget)
+            {
+                Debug.Log($"Mục tiêu hiện tại: {target.name}");
+            }
+        }
 
         // Gọi hàm PrepareToUseSkill để chuẩn bị sử dụng kỹ năng
         caster.PerformSkill(caster.skillSO, currentTarget, () =>
         {
             // Callback khi kỹ năng đã được sử dụng
             Debug.Log($"[SkillButtonHandler] {caster.name} đã hoàn tất sử dụng skill {caster.skillSO.name}.");
-            // Cập nhật HUD nếu cần
 
+            // Cập nhật HUD nếu cần
+            CameraFocusManager.Instance.ResetFocusDelayed(1.5f);
         });
 
     }

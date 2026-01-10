@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Collectible Papyrus_0: 6099780637460166283
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

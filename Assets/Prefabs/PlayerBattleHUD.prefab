@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -2.9041748, y: -33.11911}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &4364586507558224879
 MonoBehaviour:
@@ -125,7 +125,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3814660583259694469
 CanvasRenderer:
@@ -336,8 +336,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1, y: 62}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -1, y: 47.3}
+  m_SizeDelta: {x: 255, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &278702598597672289
 CanvasRenderer:
@@ -369,15 +369,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Harime
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 877c37b1676e10742af71dfbb7a23203, type: 2}
-  m_sharedMaterial: {fileID: -8082965535566169318, guid: 877c37b1676e10742af71dfbb7a23203, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 61401f8f617743545a1d9130fd4530ea, type: 2}
+  m_sharedMaterial: {fileID: 4254112386786615178, guid: 61401f8f617743545a1d9130fd4530ea, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294539979
-  m_fontColor: {r: 0.7956394, g: 0.4776148, b: 0.97735846, a: 1}
+    rgba: 4293717228
+  m_fontColor: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -389,20 +389,20 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 2192
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43
-  m_fontSizeBase: 43
+  m_fontSize: 35.1
+  m_fontSizeBase: 35.1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -734,7 +734,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -2.9041748, y: -17.384613}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &7682929676958634996
 MonoBehaviour:
@@ -1202,7 +1202,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3668404440281362182
 CanvasRenderer:
@@ -1314,6 +1314,7 @@ MonoBehaviour:
   unitLevelText: {fileID: 9007073499013435864}
   hpSlider: {fileID: 7682929676958634996}
   mpSlider: {fileID: 4364586507558224879}
+  durationBarFill: {fileID: 0}
   avatarImage: {fileID: 6556089642861747000}
   fireImageEffect: {fileID: 1057051636192602564}
   isEnemyHUD: 0
@@ -1329,7 +1330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83391227dbb73e345832d6bbc4aa40fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 6786560439691529283, guid: 884f3713e9a246f4d98ac2588f81dee0, type: 3}
   battleHUD: {fileID: 1252883146336005444}
   skillSceneGO: {fileID: 2804477123063209120, guid: 88fafcdab7d733940a572addfca765a3, type: 3}
   skillTimeline: {fileID: 8183883856925797583, guid: 88fafcdab7d733940a572addfca765a3, type: 3}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9367ab7a8ee146a4299d6ff4bf95819f, type: 3}
   m_Name: FallenAngelSkill
   m_EditorClassIdentifier: 
-  skillName: "V\u1EE5 n\u1ED5 Kaka"
+  skillName: Electric Explosion
   description: kakka
   damage: 50
   manaCost: 75
@@ -21,6 +21,8 @@ MonoBehaviour:
   buffAmount: 0
   tankAmount: 0
   aoeRadius: 10
+  summonPrefab: {fileID: 0}
+  summonDuration: 0
   skillType: 0
   targetType: 1
   skillEffect: {fileID: 3917284668803040498, guid: 984a5a3ba67de8348b7049d7b4a90baf, type: 3}

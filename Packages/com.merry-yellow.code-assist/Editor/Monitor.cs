@@ -52,9 +52,15 @@ namespace Meryel.UnityCodeAssist.Editor
             Selection.selectionChanged += OnSelectionChanged;
             //EditorSceneManager.sceneOpened += EditorSceneManager_sceneOpened;
             EditorSceneManager.activeSceneChangedInEditMode += EditorSceneManager_activeSceneChangedInEditMode;
+            EditorBuildSettings.sceneListChanged += EditorBuildSettings_sceneListChanged;
 
             Application.logMessageReceived += Application_logMessageReceived;
             //System.Threading.Tasks.TaskScheduler.UnobservedTaskException += 
+        }
+
+        private static void EditorBuildSettings_sceneListChanged()
+        {
+            OnSceneListChanged();
         }
 
         private static void OnPlayModeStateChanged(PlayModeStateChange playModeStateChange)
@@ -95,6 +101,7 @@ namespace Meryel.UnityCodeAssist.Editor
                 currentEditorFocus = Selection.activeObject.GetType().ToString();
 
             //**-- use this instead? https://learn.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=net-8.0
+            // there is also this approach, but need to check OnUpdate anyways for focus checking, https://github.com/AlkimeeGames/TagLayerTypeGenerator/blob/main/Editor/TypeGenerator.cs#L36
             var currentTagManagerLastWrite = previousTagManagerLastWrite;
             try
             {
@@ -141,6 +148,38 @@ namespace Meryel.UnityCodeAssist.Editor
             if (ScriptFinder.GetActiveGameObject(out var activeGO))
                 MQTTnetInitializer.Publisher?.SendGameObject(activeGO);
             //Assister.SendTagsAndLayers(); Don't send tags & layers here
+        }
+
+        static void OnSceneListChanged()
+        {
+            // link below for scenes which are not on build list, but we can skip this for now, because of performance and needlessness (user probably wont work with it if its not on build list)
+            // https://gist.github.com/xfleckx/2527f0420fbcc428a8b86be191d8ad96
+
+            var scenes = EditorBuildSettings.scenes;
+            var count = scenes.Length;
+
+            string[] buildIndicies = new string[count];
+            string[] names = new string[count];
+            string[] paths = new string[count];
+            string[] namesAndPaths = new string[count * 2];
+            string[] pathsAndNames = new string[count * 2];
+
+            for (int i = 0; i < count; i++)
+            {
+                var scene = scenes[i];
+                var path = scene.path;
+                var name = System.IO.Path.GetFileNameWithoutExtension(path);
+
+                buildIndicies[i] = i.ToString();
+                names[i] = name;
+                paths[i] = path;
+                namesAndPaths[i] = name;
+                namesAndPaths[i + count] = path;
+                pathsAndNames[i] = path;
+                pathsAndNames[i + count] = name;
+            }
+
+            MQTTnetInitializer.Publisher?.SendSceneList(names, paths, buildIndicies, namesAndPaths, pathsAndNames);
         }
 
         static UndoPropertyModification[] MyPostprocessModificationsCallback(UndoPropertyModification[] modifications)
@@ -263,17 +302,25 @@ namespace Meryel.UnityCodeAssist.Editor
             {
                 Preferences.PreferenceMonitor.InstanceOfPlayerPrefs.Bump();
             }
-            else if(category == "EditorPrefs")
+            else if (category == "EditorPrefs")
             {
                 Preferences.PreferenceMonitor.InstanceOfEditorPrefs.Bump();
             }
-            else if(category == "InputManager")
+            else if (category == "InputManager")
             {
                 Input.InputManagerMonitor.Instance.Bump();
             }
-            else if(category == "AnimationHuman")
+            else if (category == "AnimationHuman")
             {
                 MQTTnetInitializer.Publisher?.SendComponentHumanTrait(HumanTrait.BoneName, HumanTrait.MuscleName);
+            }
+            else if (category == "Scene")
+            {
+                OnSceneListChanged();
+            }
+            else if (category == "ShaderGlobalKeywords")
+            {
+                MQTTnetInitializer.Publisher?.SendShaderGlobalKeywords();
             }
             else
             {

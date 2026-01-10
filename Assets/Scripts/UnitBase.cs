@@ -49,12 +49,17 @@ public class UnitBase : MonoBehaviour
     }
     private IEnumerator WaitForAnimation(string AnimationName, Action onComplete)
     {
+        yield return new UnityEngine.YieldInstruction(); // Đợi một frame để đảm bảo animation đã bắt đầu
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        while (stateInfo.normalizedTime < 1.0f)
+        while (stateInfo.IsName(AnimationName) && stateInfo.normalizedTime < 1.0f)
         {
             yield return null; // Chờ cho đến khi animation kết thúc
             stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         }
         onComplete?.Invoke();
+    }
+    public float GetAnimationDuration(string AnimationName)
+    {
+        return 0.5f;
     }
 }

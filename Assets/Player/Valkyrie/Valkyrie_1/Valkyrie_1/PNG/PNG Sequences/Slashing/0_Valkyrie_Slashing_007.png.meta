@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      0_Valkyrie_Slashing_007_0: -425549850473724764
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

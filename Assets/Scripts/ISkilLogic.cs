@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public interface ISkillLogic
 {
@@ -18,7 +19,7 @@ public interface ISkillLogic
         else
         {
             // Nếu không, thực hiện logic tấn công đơn lẻ
-            ExecuteMultiTargetAttack(skill, caster, targets);
+            ExecuteSingleTargetAttack(skill, caster, targets);
         }
     }
     /// <summary>
@@ -49,7 +50,9 @@ public interface ISkillLogic
             UnitController enemyUnit = hit.GetComponent<UnitController>();
             if (enemyUnit != null && !enemyUnit.isDestroyed)
             {
-                enemyUnit.TakeDamage(skill.damage);
+                bool isCritical = DamageCalculator.IsCriticalHit(caster.unitSO.critChance);
+                int finalDamage = isCritical ? skill.damage * 2 : skill.damage;
+                enemyUnit.TakeDamage(finalDamage, isCritical);
             }
         }
     }
@@ -57,14 +60,16 @@ public interface ISkillLogic
     /// <summary>
     /// Logic cho kỹ năng đa mục tiêu cũ: nhiều hiệu ứng, mỗi cái trúng 1 mục tiêu.
     /// </summary>
-    private void ExecuteMultiTargetAttack(SkillSO skill, UnitController caster, List<UnitController> targets)
+    private void ExecuteSingleTargetAttack(SkillSO skill, UnitController caster, List<UnitController> targets)
     {
         Debug.Log($"[AttackSkillLogic] Kích hoạt kỹ năng đa mục tiêu (non-AOE).");
         foreach (var target in targets)
         {
             if (target != null && !target.isDestroyed)
             {
-                target.TakeDamage(skill.damage);
+                bool isCritical = DamageCalculator.IsCriticalHit(caster.unitSO.critChance);
+                int finalDamage = isCritical ? skill.damage * 2 : skill.damage;
+                target.TakeDamage(finalDamage, isCritical);
                 if (skill.skillEffect != null)
                 {
                     Object.Instantiate(skill.skillEffect, target.transform.position, Quaternion.identity);
@@ -89,9 +94,11 @@ public class AttackSkillLogic : ISkillLogic
                 if (skill.skillType != SkillSO.SkillType.Attack) return;
                 // Thực hiện tấn công
                 Transform spawnPoint = caster.fireTransform;
+                bool isCritical = DamageCalculator.IsCriticalHit(caster.unitSO.critChance);
+                int finalDamage = isCritical ? skill.damage * 2 : skill.damage;
                 // Gây sát thương cho từng mục tiêu trong danh sách
                 Debug.Log($"[AttackSkillLogic] Gây {skill.damage} sát thương lên {target.name}");
-                target.TakeDamage(skill.damage);
+                target.TakeDamage(finalDamage, isCritical);
             }
         GameObject projectile = Object.Instantiate(skill.skillEffect, target.transform.position, Quaternion.identity);
             Object.Destroy(projectile, 2f); // Hủy hiệu ứng sau 2 giây
@@ -115,26 +122,75 @@ public class BuffSkillLogic : ISkillLogic
 {
     public void ExecuteSkill(SkillSO skill, UnitController caster, List<UnitController> targets)
     {
-        // Kiểm tra ngay trên skill được truyền vào
-        if (caster == null || targets == null) return;
-        // Kiểm tra loại kỹ năng
-        if (skill.skillType != SkillSO.SkillType.Buff) return;
-        // Thực hiện buff
-        //target.ApplyBuff(skill.buffEffect);
-        //Debug.Log($"Đã áp dụng buff {skill.buffEffect.name} cho {target.name} bằng kỹ năng {skill.skillName}");
+        if (caster == null || targets == null || targets.Count == 0) return;
+
+        // Cho phép dùng logic này cho cả loại Heal và Buff
+        if (skill.skillType != SkillSO.SkillType.Buff && skill.skillType != SkillSO.SkillType.Heal) return;
+
+        Debug.Log($"[BuffSkillLogic] {caster.name} kích hoạt hỗ trợ toàn đội!");
+
+        foreach (var target in targets)
+        {
+            if (target != null && !target.isDestroyed && target.isPlayerUnit)
+            {
+                // 1. VFX
+                if (skill.skillEffect != null)
+                {
+                    GameObject vfx = Object.Instantiate(skill.skillEffect, target.transform.position, Quaternion.identity);
+                    target.StartCoroutine(DestroyVFX(vfx, 2.5f)); // Hàm hủy VFX phụ trợ
+                }
+
+                // 2. Hồi máu (Nếu Heal Amount > 0)
+                if (skill.healAmount > 0)
+                {
+                    target.Heal(skill.healAmount, false);
+                }
+
+                // 3. Tăng Damage (Nếu Damage Bonus > 0)
+                if (skill.damageBonus > 0)
+                {
+                    target.ApplyStatModifier("Damage", skill.damageBonus, skill.buffDuration);
+                }
+            }
+        }
+    }
+
+    private System.Collections.IEnumerator DestroyVFX(GameObject vfx, float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (vfx != null) Object.Destroy(vfx);
     }
 }
 public class TankSkillLogic : ISkillLogic
 {
     public void ExecuteSkill(SkillSO skill, UnitController caster, List<UnitController> targets)
     {
-        // Kiểm tra ngay trên skill được truyền vào
-        if (caster == null || targets == null) return;
-        // Kiểm tra loại kỹ năng
+        if (caster == null || targets == null || targets.Count == 0) return;
+
+        // Kiểm tra đúng loại skill chưa (để an toàn)
         if (skill.skillType != SkillSO.SkillType.Tank) return;
-        // Thực hiện debuff
-        //target.ApplyDebuff(skill.debuffEffect);
-        //Debug.Log($"Đã áp dụng debuff {skill.debuffEffect.name} cho {target.name} bằng kỹ năng {skill.skillName}");
+
+        Debug.Log($"[TankSkillLogic] {caster.name} kích hoạt kỹ năng bảo vệ đồng minh!");
+
+        foreach (var target in targets)
+        {
+            if (target != null && !target.isDestroyed && target.isPlayerUnit)
+            {
+                // 1. Tạo hiệu ứng hình ảnh (VFX) trên mỗi mục tiêu
+                if (skill.skillEffect != null)
+                {
+                    GameObject vfx = Object.Instantiate(skill.skillEffect, target.transform.position, Quaternion.identity);
+                    Object.Destroy(vfx, 2f); // Hủy VFX sau 2s
+                }
+
+                // 2. Buff Shield (Nếu có set thông số > 0)
+                if (skill.shieldAmount > 0)
+                {
+                    target.AddShield(skill.shieldAmount, skill.buffDuration);
+                }
+
+            }
+        }
     }
 }
 

@@ -7,7 +7,8 @@ public enum CharacterID
     Harime,
     Necromancer,
     FallenAngel,
-    Valkyrie
+    Valkyrie,
+    DarkOracle
 }
 
 [System.Serializable]
@@ -48,13 +49,20 @@ public class SkillUIManager : MonoBehaviour
 
     public SkillUISet GetUISet(CharacterID id)
     {
-        // Kiểm tra xem dictionary có được khởi tạo chưa
         if (uiDictionary.TryGetValue(id, out SkillUISet foundSet))
         {
+            // --- LOG TÊN Ở ĐÂY ---
+            string inName = foundSet.skillUI_In != null ? foundSet.skillUI_In.name : "NULL";
+            string outName = foundSet.skillUI_Out != null ? foundSet.skillUI_Out.name : "NULL";
+
+            Debug.Log($"[SkillUIManager] Đã tìm thấy Set của: {foundSet.characterID}. " +
+                      $"UI_In: {inName} | UI_Out: {outName}");
+            // ---------------------
+
             return foundSet;
         }
 
-        Debug.LogError($"SkillUIManager: Không tìm thấy UI cho tướng có ID: {id}. Hãy kiểm tra lại Inspector và ID của tướng!");
+        Debug.LogError($"SkillUIManager: Không tìm thấy UI cho tướng có ID: {id}.");
         return null;
     }
 }

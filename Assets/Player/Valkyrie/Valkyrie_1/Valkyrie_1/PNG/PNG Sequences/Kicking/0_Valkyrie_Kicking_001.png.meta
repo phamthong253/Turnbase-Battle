@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      0_Valkyrie_Kicking_001_0: 8532110259193920295
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

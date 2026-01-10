@@ -12,17 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
   m_Name: ValkyrieSO
   m_EditorClassIdentifier: 
+  unitID: 4
   name: Valkyrie
   hp: 150
   maxHP: 150
-  mp: 30
+  mp: 0
   maxMP: 100
   armor: 20
   damage: 15
   magicDamage: 0
   level: 99
-  attackSpeed: 3
+  attackCooldown: 2
   attackType: 0
   attackRange: 10
+  comboThreshold: 7
+  critChance: 10
   avatar: {fileID: -5792725295997086455, guid: 349c9f546746ec541ae6712c079db1f6, type: 3}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  hitVFXPrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  enhencedAttackType: 1
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 3
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: Mlee Enhanced VFX
+  useEnhancedAOE: 0
+  aoeRadius: 0
+  aoeDamage: 0
+  cinematicBackdropColor: {r: 0.5622641, g: 0.3970887, b: 0.066835135, a: 0.64705884}
+  cinematicSpeedLineColor: {r: 1, g: 1, b: 1, a: 1}

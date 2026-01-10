@@ -8,6 +8,7 @@ TagManager:
   - WinnerUI
   - SkillTimelineDirector
   - Enemy
+  - Audio
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - UI
   - Transition
   - Popup
-  - 
+  - SkillFocus
   - 
   - 
   - 

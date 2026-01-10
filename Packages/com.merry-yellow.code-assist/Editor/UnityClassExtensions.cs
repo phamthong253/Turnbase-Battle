@@ -50,6 +50,162 @@ namespace Meryel.UnityCodeAssist.Editor
             }
         }
 
+        public static Synchronizer.Model.Component_Material? ToSyncModelOfComponentMaterial(this GameObject go)
+        {
+            if (!go.TryGetComponent<Renderer>(out var renderer))
+                return null;
+
+            if (!renderer)
+                return null;
+
+            var propertyNames = new List<string>();
+            var propertyIndices = new List<string>();
+            var propertyTypes = new List<int>();
+            var propertyValues = new List<string>();
+
+            var processedShaders = new HashSet<Shader>();
+
+            // most of the time, there will be a single material, so initiate with capacity of 1
+            var keywordsContainer = new List<string[]>(1);
+            var passNamesContainer = new List<string[]>(1);
+            var passIndicesContainer = new List<string[]>(1);
+
+            foreach (var material in renderer.sharedMaterials)
+            {
+                if (!material)
+                    continue;
+
+                var shader = material.shader;
+                if (!shader)
+                    continue;
+
+                if (processedShaders.Contains(shader))
+                    continue;
+                processedShaders.Add(shader);
+
+                int propertyCount = shader.GetPropertyCount();
+
+                for (int i = 0; i < propertyCount; i++)
+                {
+                    var propertyName = shader.GetPropertyName(i);
+                    var propertyId = Shader.PropertyToID(propertyName);
+
+                    if (!material.HasProperty(propertyId))
+                        continue;
+
+                    var propertyTypeRaw = shader.GetPropertyType(i);
+                    GetExtendedTypeAndValue(propertyId, propertyTypeRaw, material, out var propertyTypeExtended, out var propertyValue);
+
+                    propertyNames.Add(propertyName);
+                    propertyIndices.Add(propertyId.ToString());
+                    propertyTypes.Add((int)propertyTypeExtended);
+                    propertyValues.Add(propertyValue);
+                }
+
+                keywordsContainer.Add(shader.keywordSpace.keywordNames);
+
+                var passCount = material.passCount;
+                var passNames = new string[passCount];
+                var passIndices = new string[passCount];
+                for (int i = 0; i < passCount; i++)
+                {
+                    passNames[i] = material.GetPassName(i);
+                    passIndices[i] = i.ToString();
+                }
+                passNamesContainer.Add(passNames);
+                passIndicesContainer.Add(passIndices);
+            }
+
+            var data = new Synchronizer.Model.Component_Material
+            {
+                GameObjectId = GetId(go),
+                PropertyNames = propertyNames.ToArray(),
+                PropertyIndices = propertyIndices.ToArray(),
+                PropertyTypes = propertyTypes.ToArray(),
+                PropertyValues = propertyValues.ToArray(),
+                Keywords = ConcatenateListOfArrays(keywordsContainer),
+                PassNames = ConcatenateListOfArrays(passNamesContainer),
+                PassIndices = ConcatenateListOfArrays(passIndicesContainer),
+            };
+            return data;
+
+
+            static void GetExtendedTypeAndValue(int propertyId, UnityEngine.Rendering.ShaderPropertyType typeRaw, Material material, out Synchronizer.Model.Component_Material.MaterialPropertyType typeExtended, out string value)
+            {
+                // Handle scalar types based on shader declaration
+                switch (typeRaw)
+                {
+                    case UnityEngine.Rendering.ShaderPropertyType.Color:
+                        typeExtended = Synchronizer.Model.Component_Material.MaterialPropertyType.Color;
+                        value = material.GetColor(propertyId).ToString();
+                        break;
+
+                    case UnityEngine.Rendering.ShaderPropertyType.Vector:
+                        typeExtended = Synchronizer.Model.Component_Material.MaterialPropertyType.Vector;
+                        value = material.GetVector(propertyId).ToString();
+                        break;
+
+                    case UnityEngine.Rendering.ShaderPropertyType.Float:
+                        typeExtended = Synchronizer.Model.Component_Material.MaterialPropertyType.Float;
+                        value = material.GetFloat(propertyId).ToString();
+                        break;
+
+                    case UnityEngine.Rendering.ShaderPropertyType.Range:
+                        typeExtended = Synchronizer.Model.Component_Material.MaterialPropertyType.Range;
+                        value = material.GetFloat(propertyId).ToString();
+                        break;
+
+                    case UnityEngine.Rendering.ShaderPropertyType.Texture:
+                        {
+                            typeExtended = Synchronizer.Model.Component_Material.MaterialPropertyType.Texture;
+                            var texture = material.GetTexture(propertyId);
+                            if (texture)
+                                value = texture.name;
+                            else
+                                value = string.Empty;
+                        }
+                        break;
+
+                    case UnityEngine.Rendering.ShaderPropertyType.Int:
+                        typeExtended = Synchronizer.Model.Component_Material.MaterialPropertyType.Integer;
+                        value = material.GetInteger(propertyId).ToString();
+                        break;
+
+                    default:
+                        typeExtended = Synchronizer.Model.Component_Material.MaterialPropertyType.Invalid;
+                        value = string.Empty;
+                        Serilog.Log.Error("invalid material type {TypeRaw}", typeRaw);
+                        break;
+                }
+            }
+
+            static string[] ConcatenateListOfArrays(List<string[]> listOfArrays)
+            {
+                if (listOfArrays.Count == 0)
+                    return new string[0];
+                else if (listOfArrays.Count == 1)
+                    return listOfArrays[0];
+
+                int totalLength = 0;
+                foreach (var arr in listOfArrays)
+                    totalLength += arr.Length;
+
+                string[] result = new string[totalLength];
+                Span<string> span = result.AsSpan();
+
+                int offset = 0;
+                foreach (var arr in listOfArrays)
+                {
+                    arr.AsSpan().CopyTo(span.Slice(offset));
+                    offset += arr.Length;
+                }
+
+                return result;
+            }
+
+
+        }
+
         public static Synchronizer.Model.Component_Animation? ToSyncModelOfComponentAnimation(this GameObject go)
         {
             if (!go.TryGetComponent<Animation>(out var animation))
@@ -107,20 +263,36 @@ namespace Meryel.UnityCodeAssist.Editor
                 data.LayerNames[i] = animator.GetLayerName(i);
             }
 
-            var parameterCount = animator.parameterCount;
-            data.ParameterIndices = new string[parameterCount];
-            data.ParameterNames = new string[parameterCount];
-            data.ParameterHashes = new string[parameterCount];
-            data.ParameterTypes = new int[parameterCount];
-            for (var i = 0; i < parameterCount; i++)
+            int curParameterIndex = 0;
+            try
             {
-                //**-- recieving error here, like "IndexOutOfRangeException: Index must be between 0 and 3",
-                //**-- probably user edits it while retrieving data, fix? or just ignore?
-                var parameter = animator.GetParameter(i);
-                data.ParameterIndices[i] = i.ToString();
-                data.ParameterNames[i] = parameter.name;
-                data.ParameterHashes[i] = parameter.nameHash.ToString();
-                data.ParameterTypes[i] = (int)parameter.type;
+                var parameterCount = animator.parameterCount;
+                data.ParameterIndices = new string[parameterCount];
+                data.ParameterNames = new string[parameterCount];
+                data.ParameterHashes = new string[parameterCount];
+                data.ParameterTypes = new int[parameterCount];
+                for (var i = 0; i < parameterCount; i++)
+                {
+                    curParameterIndex = i;
+                    // receiving error here, like "IndexOutOfRangeException: Index must be between 0 and 3",
+                    // probably user edits it while retrieving data
+                    var parameter = animator.GetParameter(i);
+                    data.ParameterIndices[i] = i.ToString();
+                    data.ParameterNames[i] = parameter.name;
+                    data.ParameterHashes[i] = parameter.nameHash.ToString();
+                    data.ParameterTypes[i] = (int)parameter.type;
+                }
+            }
+            catch (IndexOutOfRangeException indexOutOfRangeException)
+            {
+                Serilog.Log.Debug(indexOutOfRangeException, "handling IndexOutOfRangeException of animator.GetParameter(i)");
+
+                var parameterCount = curParameterIndex;
+
+                data.ParameterIndices = ResizeArray(data.ParameterIndices, parameterCount);
+                data.ParameterNames = ResizeArray(data.ParameterNames, parameterCount);
+                data.ParameterHashes = ResizeArray(data.ParameterHashes, parameterCount);
+                data.ParameterTypes = ResizeArray(data.ParameterTypes, parameterCount);
             }
 
             // When you specify a state name, or the string used to generate a hash, it should include the name of the parent layer. For example, if you have a Bounce state in the Base Layer, the name is Base Layer.Bounce
@@ -136,6 +308,7 @@ namespace Meryel.UnityCodeAssist.Editor
             data.StateTagHashes = new string[stateCount];
             data.StateFullPaths = new string[stateCount];
             data.StateFullPathHashes = new string[stateCount];
+            data.StateMotionNames = new string[stateCount];
             for (int i = 0; i < stateCount; i++)
             {
                 var state = states[i].state;
@@ -146,6 +319,11 @@ namespace Meryel.UnityCodeAssist.Editor
                 data.StateTagHashes[i] = Animator.StringToHash(state.tag).ToString();
                 data.StateFullPaths[i] = fullPath;
                 data.StateFullPathHashes[i] = Animator.StringToHash(fullPath).ToString();
+                var motion = state.motion;
+                if (motion)
+                    data.StateMotionNames[i] = motion.name;
+                else
+                    data.StateMotionNames[i] = string.Empty;
             }
 
             var transitionCount = transitions.Count;
@@ -175,6 +353,12 @@ namespace Meryel.UnityCodeAssist.Editor
             return data;
 
             //var events = clips.SelectMany(c => c.events);
+
+            static T[] ResizeArray<T>(T[] array, int size)
+            {
+                Array.Resize(ref array, size);
+                return array;
+            }
         }
 
         
@@ -194,6 +378,9 @@ namespace Meryel.UnityCodeAssist.Editor
             transitions = new List<(AnimatorTransition, string)>();
             foreach (AnimatorControllerLayer layer in layers)
             {
+                if (layer == null || layer.stateMachine == null)
+                    continue;
+
                 ChildAnimatorState[] animStates = layer.stateMachine.states;
                 getStateMachineInfo(layer.stateMachine, 0, layer.name, states, transitions);
             }

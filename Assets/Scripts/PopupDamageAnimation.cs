@@ -20,7 +20,7 @@ public class PopupDamageAnimation : MonoBehaviour
     }
     private void Update()
     {
-        tmp.color = new Color(1,1,1, opacityCurve.Evaluate(floatTime));
+        //tmp.color = new Color(1,1,1, opacityCurve.Evaluate(floatTime));
         transform.localScale = Vector3.one * scaleCurve.Evaluate(floatTime);
         transform.position = origin + new Vector3(0, 1 + heightCurve.Evaluate(floatTime), 0);
         floatTime += Time.deltaTime;

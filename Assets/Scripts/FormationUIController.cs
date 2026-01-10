@@ -10,6 +10,7 @@ public class FormationUIController : MonoBehaviour
 
     // Biến để lưu trữ tướng đang được chọn từ danh sách bên trái
     private UnitSO currentlySelectedUnit;
+    private SkillSO currentlySelectedSkill; // Biến để lưu trữ kỹ năng đang được chọn (nếu cần)
     public GameObject warningPopup; // Popup cảnh báo nếu đội hình chưa đầy đủ
 
     void Start()
@@ -42,6 +43,7 @@ public class FormationUIController : MonoBehaviour
     // Hàm được gọi khi người chơi nhấn vào một ô trong đội hình
     private void OnSlotClicked(int slotIndex)
     {
+        ToopTipTrigger toolTipTrigger = formationSlotButtons[slotIndex].GetComponent<ToopTipTrigger>();
         if (currentlySelectedUnit != null)
         {
             // Gán tướng đang chọn vào vị trí tương ứng trong FormationManager
@@ -53,7 +55,11 @@ public class FormationUIController : MonoBehaviour
             {
                 slotImage.sprite = currentlySelectedUnit.avatar;
             }
-
+            if(toolTipTrigger != null)
+            {
+                // Cập nhật dữ liệu cho ToopTipTrigger
+                toolTipTrigger.SetUnitData(currentlySelectedUnit, currentlySelectedSkill); // Giả sử không có SkillSO ở đây
+            }
             // Xóa lựa chọn hiện tại để người chơi phải chọn lại tướng khác
             currentlySelectedUnit = null;
         }
@@ -62,13 +68,15 @@ public class FormationUIController : MonoBehaviour
             // Logic để xóa tướng khỏi vị trí nếu người chơi nhấn vào ô đã có tướng
             //FormationManager.Instance.ClearUnitFromFormation(slotIndex);
             // Cập nhật lại hình ảnh ô trống...
+            toolTipTrigger.SetUnitData(null, null); // Xóa dữ liệu tướng trong tooltip
         }
         StartBtnUpdateState(); // Cập nhật trạng thái nút Start mỗi khi có thay đổi đội hình
     }
     private void OnStartButtonClicked()
     {
         // Logic để bắt đầu trận đấu, có thể chuyển sang scene khác hoặc gọi hàm khởi tạo trận đấu
-        if(IsFormationInvalid())
+        AudioManager.Instance.PlaySFX("startBtnAudiostartBtn"); // Phát âm thanh khi nhấn nút Start
+        if (IsFormationInvalid())
         {
             SceneManager.LoadScene("Wave1"); // Thay "BattleScene" bằng tên scene bạn muốn chuyển đến
         }

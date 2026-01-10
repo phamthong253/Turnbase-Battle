@@ -12,17 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
   m_Name: Necromancer
   m_EditorClassIdentifier: 
+  unitID: 3
   name: Necromancer
   hp: 100
   maxHP: 30
-  mp: 90
+  mp: 0
   maxMP: 100
   armor: 10
   damage: 15
   magicDamage: 30
   level: 99
-  attackSpeed: 3
+  attackCooldown: 2.5
   attackType: 2
   attackRange: 20
+  comboThreshold: 5
+  critChance: 0.6
   avatar: {fileID: -5792725295997086455, guid: 6db07dc0426ac404d949e6b35e255df2, type: 3}
   projectilePrefab: {fileID: 6701866281983643091, guid: ba4177f6b7bedbe46afdd972113fc806, type: 3}
+  hitVFXPrefab: {fileID: 4306488877223958017, guid: ecb38e0319a6ad44cbca52d7b5add7a6, type: 3}
+  enhencedAttackType: 1
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 4
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: Necromancer Enhanced VFX
+  useEnhancedAOE: 1
+  aoeRadius: 2.5
+  aoeDamage: 0.8
+  cinematicBackdropColor: {r: 0.6301083, g: 0.2547169, b: 0.8490566, a: 0.56078434}
+  cinematicSpeedLineColor: {r: 1, g: 1, b: 1, a: 1}

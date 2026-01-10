@@ -12,17 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
   m_Name: FallenAngel
   m_EditorClassIdentifier: 
+  unitID: 1
   name: FallenAngel
   hp: 100
   maxHP: 50
-  mp: 50
+  mp: 100
   maxMP: 100
   armor: 10
   damage: 15
   magicDamage: 20
   level: 99
-  attackSpeed: 2.5
+  attackCooldown: 1.5
   attackType: 2
   attackRange: 20
+  comboThreshold: 6
+  critChance: 10
   avatar: {fileID: -1676951649959379457, guid: 97bfc93c741ac6a41bf57f5db8b2947b, type: 3}
   projectilePrefab: {fileID: 6701866281983643091, guid: 67de82af01e2ce04885a4f939a7eb089, type: 3}
+  hitVFXPrefab: {fileID: 3042519775331041172, guid: 841004c4c6a39e244abe2257394de913, type: 3}
+  enhencedAttackType: 2
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 6
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: FallenAngel Enhance VFX
+  useEnhancedAOE: 1
+  aoeRadius: 10
+  aoeDamage: 0.7
+  cinematicBackdropColor: {r: 0.2815023, g: 0.47292608, b: 0.78113204, a: 0.6039216}
+  cinematicSpeedLineColor: {r: 1, g: 1, b: 1, a: 1}

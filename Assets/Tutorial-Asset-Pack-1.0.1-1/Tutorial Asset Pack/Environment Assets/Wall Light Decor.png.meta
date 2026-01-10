@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Wall Light Decor_0: -5774812201675537892
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

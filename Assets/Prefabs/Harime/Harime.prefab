@@ -702,6 +702,8 @@ MonoBehaviour:
   currentArmor: 30
   isDestroyed: 0
   fireTransform: {fileID: 1796313878231919979}
+  attackAudioClip: {fileID: 8300000, guid: 898afd02a9530ec4481135e537c64603, type: 3}
+  hitAudioClip: {fileID: 8300000, guid: 90ac573b1ddca4743974a8f7972df396, type: 3}
 --- !u!114 &2432754546543190169
 MonoBehaviour:
   m_ObjectHideFlags: 0

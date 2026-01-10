@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
   m_Name: GolemSO
   m_EditorClassIdentifier: 
+  unitID: 
   name: Golem
   hp: 50
   maxHP: 20
@@ -21,8 +22,21 @@ MonoBehaviour:
   damage: 10
   magicDamage: 0
   level: 10
-  attackSpeed: 1.5
+  attackCooldown: 1.7
   attackType: 0
   attackRange: 3
+  comboThreshold: 3
+  critChance: 0
   avatar: {fileID: 0}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  hitVFXPrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  enhencedAttackType: 0
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 0
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: 
+  useEnhancedAOE: 0
+  aoeRadius: 0
+  aoeDamage: 0
+  cinematicBackdropColor: {r: 0, g: 0, b: 0, a: 0}
+  cinematicSpeedLineColor: {r: 0, g: 0, b: 0, a: 0}

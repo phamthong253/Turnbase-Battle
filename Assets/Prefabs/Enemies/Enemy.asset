@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
+  m_Name: Enemy
+  m_EditorClassIdentifier: 
+  unitID: 
+  name: Slime
+  hp: 100
+  maxHP: 100
+  mp: 10
+  maxMP: 200
+  armor: 1
+  damage: 5
+  magicDamage: 0
+  level: 1
+  attackCooldown: 3.5
+  attackType: 4
+  attackRange: 30
+  comboThreshold: 3
+  critChance: 0
+  avatar: {fileID: 0}
+  projectilePrefab: {fileID: 6701866281983643091, guid: ba4177f6b7bedbe46afdd972113fc806, type: 3}
+  hitVFXPrefab: {fileID: 7428353199889976217, guid: 5b4f9bd7f869abf4a827f1d8e35d7af4, type: 3}
+  enhencedAttackType: 0
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 3
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: 
+  useEnhancedAOE: 0
+  aoeRadius: 0
+  aoeDamage: 0
+  cinematicBackdropColor: {r: 0, g: 0, b: 0, a: 0}
+  cinematicSpeedLineColor: {r: 0, g: 0, b: 0, a: 0}

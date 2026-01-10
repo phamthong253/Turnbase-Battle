@@ -16,6 +16,7 @@ public class ObjectPooling : MonoBehaviour
     public static ObjectPooling Instance; // Biến singleton để truy cập từ các script khác
     public List<Pool> pools; // Danh sách các pool
     public Dictionary<string, Queue<GameObject>> poolDictionary; // Từ điển để quản lý các pool theo tên
+    private Dictionary<string, GameObject> prefabDictionary;
 
     private void Awake()
     {
@@ -35,11 +36,13 @@ public class ObjectPooling : MonoBehaviour
     private void Start()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
-        foreach(Pool pool in pools)
+        prefabDictionary = new Dictionary<string, GameObject>();
+        foreach (Pool pool in pools)
         {
             //định nghĩa Queue trong Dictionary
             Queue<GameObject> gameObjects = new Queue<GameObject>();
-            for(int i = 0; i < pool.size; i++)
+            prefabDictionary.Add(pool.TagName, pool.pooledObjects);
+            for (int i = 0; i < pool.size; i++)
             {
                 GameObject obj = Instantiate(pool.pooledObjects);
                 obj.SetActive(false); // Đặt trạng thái ban đầu là không hoạt động
@@ -55,6 +58,22 @@ public class ObjectPooling : MonoBehaviour
         {
             Debug.LogWarning(tag + " không tồn tại trong Dictionary");
             return null;
+        }
+        if(poolDictionary[tag].Count == 0)
+        {
+            if (prefabDictionary.ContainsKey(tag))
+            {
+                GameObject newObj = Instantiate(prefabDictionary[tag]);
+                newObj.SetActive(false); // Đặt trạng thái ban đầu là không hoạt động
+                newObj.transform.position = position;
+                newObj.transform.rotation = rotation;
+                newObj.SetActive(true);
+                return newObj;
+            }
+            else
+            {
+                return null;
+            }
         }
         GameObject objectToSpawn = poolDictionary[tag].Dequeue(); // Lấy đối tượng từ hàng đợi
         objectToSpawn.SetActive(true); // Kích hoạt đối tượng
