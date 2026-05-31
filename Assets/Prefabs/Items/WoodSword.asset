@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e36645f361ad3449edc1ea29aeff66, type: 3}
+  m_Name: WoodSword
+  m_EditorClassIdentifier: 
+  itemID: sword_wood
+  itemType: 0
+  dropRate: 0
+  itemName: Wood Sword
+  description: abcdxyz
+  itemRare: 4
+  isEquipment: 0
+  itemAvatar: {fileID: -1077529749158723009, guid: 31ea8c146b018d64089d3b5fcfd074ba, type: 3}
+  statModifiers:
+  - statType: 1
+    value: 10
+  - statType: 3
+    value: 5
+  dropLocations:
+  - {fileID: 11400000, guid: 02e037e0b11ec6f419c5c38d06675751, type: 2}

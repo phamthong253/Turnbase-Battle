@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a6ccbe6e418246af42bf603dfb3f7, type: 3}
+  m_Name: RarityAssetSO
+  m_EditorClassIdentifier: 
+  rarityList:
+  - rarity: 4
+    rarityColor: {r: 0.6784314, g: 0.95294124, b: 0.8117648, a: 1}
+    rarityIcon: {fileID: -2154677236027873248, guid: ac5725bf59fade44baa6fc9f90698a5a, type: 3}
+  - rarity: 3
+    rarityColor: {r: 0.83921576, g: 0.9058824, b: 1, a: 1}
+    rarityIcon: {fileID: 202553867488101407, guid: f7db10dbc47da694a99df491bfe02f30, type: 3}
+  - rarity: 2
+    rarityColor: {r: 0.8980393, g: 0.74509805, b: 0.9490197, a: 1}
+    rarityIcon: {fileID: -577201014351295351, guid: 54454d6d45d2b634ea1b80cdad403f63, type: 3}
+  - rarity: 1
+    rarityColor: {r: 0.9058824, g: 0.8078432, b: 0.54509807, a: 1}
+    rarityIcon: {fileID: 7482403397944419933, guid: 8350833f2d35e634e92451793b06501e, type: 3}
+  - rarity: 0
+    rarityColor: {r: 0.9333334, g: 0.5882353, b: 0.58431375, a: 1}
+    rarityIcon: {fileID: -9189953977569128172, guid: 050836889e51e544ab74cd2678a5a034, type: 3}

@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
+  m_Name: ValkyrieSO
+  m_EditorClassIdentifier: 
+  unitID: 4
+  name: Valkyrie
+  hp: 150
+  maxHP: 150
+  mp: 0
+  maxMP: 100
+  armor: 20
+  damage: 15
+  magicDamage: 0
+  level: 99
+  attackCooldown: 2
+  attackType: 0
+  attackRange: 10
+  comboThreshold: 7
+  critChance: 10
+  avatar: {fileID: -5792725295997086455, guid: 349c9f546746ec541ae6712c079db1f6, type: 3}
+  entireAvatar: {fileID: -4224019939383970310, guid: 38c5c4d828a9d3246ae34cd6d2b3a338, type: 3}
+  projectilePrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  hitVFXPrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  passiveSkill: {fileID: 11400000, guid: de325b46fd5db3440be6127a41fb440d, type: 2}
+  enhancedBuffEffect: {fileID: 0}
+  enhencedAttackType: 1
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 3
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: Mlee Enhanced VFX
+  useEnhancedAOE: 0
+  aoeRadius: 0
+  aoeDamage: 0
+  cinematicBackdropColor: {r: 0.5622641, g: 0.3970887, b: 0.066835135, a: 0.64705884}
+  cinematicSpeedLineColor: {r: 1, g: 1, b: 1, a: 1}
+  hpGrowth: 10
+  damageGrowth: 2
+  armorGrowth: 0.5
+  rankMultiplierStep: 0.1
+  rankConfig:
+  - requiredItems:
+    - {fileID: 11400000, guid: 8c74097d493b1e04b91029d4d0b99754, type: 2}
+    - {fileID: 11400000, guid: 8cfb82736e58fc242b25f58871a8bcfd, type: 2}
+    - {fileID: 11400000, guid: 8bb5cf84f49c4904b90f2de59fbfe06e, type: 2}
+    - {fileID: 11400000, guid: 4fa8373748494a645af6bd9380d9c25c, type: 2}
+    - {fileID: 11400000, guid: 79d0404f055c80d4fa3d862f2b2528cf, type: 2}
+    - {fileID: 11400000, guid: a5bf3a336b2753f499536b5326170501, type: 2}
+    rankLevel: 1

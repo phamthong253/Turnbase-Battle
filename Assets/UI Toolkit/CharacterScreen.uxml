@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="Root" style="flex-direction: row; width: 100%; height: 100%;">
+        <ui:VisualElement name="UnitViewPanel" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Background/BackgroundPNG/world_map/EVEv1EmVAAA793z.jpg?fileID=8869614026945487435&amp;guid=b0a31c8f1b6ca5045b148647dd7a8141&amp;type=3#EVEv1EmVAAA793z_0&quot;);">
+            <ui:Label text="Characters List" class="header-text" style="-unity-text-align: upper-left; background-image: none; -unity-slice-scale: 0.1px; -unity-slice-type: sliced;" />
+            <ui:ScrollView name="ScrollView" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/Items/Free%20Game%20Items/Icon/ExportedIcons/Item3.jpg?fileID=4241727045068834795&amp;guid=0313f084a35942746bb054a902e2fdf2&amp;type=3#Item3_0&quot;); height: 950px; width: 1550px; align-items: center; justify-content: center; -unity-slice-scale: 0.3px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; align-self: center; top: 30px;">
+                <ui:VisualElement name="GridContainer" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap; align-items: flex-start;" />
+            </ui:ScrollView>
+        </ui:VisualElement>
+        <ui:VisualElement name="DetailPanel" style="width: 400px; background-color: rgb(44, 62, 80); border-left-width: 5px; display: none;">
+            <ui:VisualElement name="ProfileSection" style="align-items: center; padding: 20px;">
+                <ui:VisualElement name="DetailAvatar" style="width: 150px; height: 150px; background-color: gray; border-radius: 10px;" />
+                <ui:Label name="DetailName" text="Unit Name" style="font-size: 24px; color: white; margin-top: 10px;" />
+                <ui:Label name="DetailLevel" text="Lv. 1" style="font-size: 18px; color: yellow;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="StatsContainer" style="padding: 20px;">
+                <ui:Label name="StatHP" text="HP: 1000" class="stat-text" />
+                <ui:Label name="StatAtk" text="ATK: 50" class="stat-text" />
+                <ui:Label name="StatArmor" text="DEF: 10" class="stat-text" />
+            </ui:VisualElement>
+            <ui:VisualElement name="EquipmentGrid" style="flex-direction: row; flex-wrap: wrap; justify-content: space-around; padding: 10px;" />
+            <ui:Button name="CloseBtn" text="Close" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="CardRoot" style="width: 349px; height: 536px; margin: 10px; background-color: rgb(52, 73, 94); border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; background-image: url(&quot;project://database/Assets/Background/BackgroundPNG/templateContainer/templateCard.jpg?fileID=-6524950713196503887&amp;guid=c5c359d037e10e2488ad80641dd83dbb&amp;type=3#templateCard_0&quot;); top: auto; align-items: flex-start; align-self: flex-start;">
+        <ui:VisualElement name="Icon" style="flex-grow: 1; margin: 5px; background-color: rgba(127, 140, 141, 0); height: 100px; align-self: center; width: 300px; align-content: center; position: relative; top: 20px; -unity-slice-scale: 0.5px;" />
+        <ui:VisualElement style="height: 70px; background-color: rgb(44, 62, 80); flex-direction: row; align-items: center; justify-content: space-between; padding: 5px; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; width: 300px; align-self: center; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; margin-top: 25px; margin-right: 25px; margin-bottom: 25px; margin-left: 25px; font-size: 14px;">
+            <ui:Label name="LevelText" text="Lv.1" style="color: white; -unity-font-style: bold; font-size: 43px;" />
+            <ui:VisualElement name="StarContainer" style="flex-direction: row; font-size: 37px;">
+                <ui:Label text="★★★" style="color: rgb(241, 196, 15);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

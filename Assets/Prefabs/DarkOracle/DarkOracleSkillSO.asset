@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9367ab7a8ee146a4299d6ff4bf95819f, type: 3}
+  m_Name: DarkOracleSkillSO
+  m_EditorClassIdentifier: 
+  skillName: regeneration
+  description: increase damage & healing
+  damage: 0
+  manaCost: 0
+  cooldownTime: 0
+  aoeRadius: 0
+  summonPrefab: {fileID: 0}
+  summonDuration: 0
+  skillType: 3
+  targetType: 3
+  shieldAmount: 0
+  healAmount: 50
+  damageBonus: 50
+  buffDuration: 10
+  skillEffect: {fileID: 9017484664307500583, guid: 1245b8d2997d5b34fb1637be70a7eb05, type: 3}
+  skillAnimationString: attackSkill
+  skillSound: {fileID: 8300000, guid: dcc07d401d119524e94c50f6b22322ed, type: 3}
+  skillTimeline: {fileID: 11400000, guid: ed2c6950a6febf5418f927699141863f, type: 2}
+  buffData: {fileID: 11400000, guid: 6795bc374c416a944a8697bccd753236, type: 2}

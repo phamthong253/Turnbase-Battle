@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9367ab7a8ee146a4299d6ff4bf95819f, type: 3}
+  m_Name: HarimeSkill
+  m_EditorClassIdentifier: 
+  skillName: "C\xFA \u0110\xE2m Ch\xED M\u1EA1ng"
+  description: "\u0110\xE2m c\u1EF1c m\u1EA1nh"
+  damage: 100
+  manaCost: 50
+  cooldownTime: 5
+  healAmount: 0
+  buffAmount: 0
+  tankAmount: 0
+  skillType: 0
+  targetType: 0
+  skillEffect: {fileID: 316776478079262399, guid: e0d7e95c4a4847b4380f91dc39007446, type: 3}
+  skillAnimationString: attackSkill
+  skillSound: {fileID: 0}
+  skillTimeline: {fileID: 11400000, guid: 6228c9001a5032042b90651ba5c34c1d, type: 2}

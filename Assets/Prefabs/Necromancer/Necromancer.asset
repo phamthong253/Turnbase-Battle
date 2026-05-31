@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
+  m_Name: Necromancer
+  m_EditorClassIdentifier: 
+  unitID: 3
+  name: Necromancer
+  hp: 100
+  maxHP: 30
+  mp: 100
+  maxMP: 100
+  armor: 10
+  damage: 15
+  magicDamage: 30
+  level: 99
+  attackCooldown: 2.5
+  attackType: 2
+  attackRange: 20
+  comboThreshold: 5
+  critChance: 0.6
+  avatar: {fileID: -5792725295997086455, guid: 6db07dc0426ac404d949e6b35e255df2, type: 3}
+  entireAvatar: {fileID: -7003476542098172104, guid: 1a69e76fce24beb4182063380250268a, type: 3}
+  projectilePrefab: {fileID: 6701866281983643091, guid: ba4177f6b7bedbe46afdd972113fc806, type: 3}
+  hitVFXPrefab: {fileID: 4306488877223958017, guid: ecb38e0319a6ad44cbca52d7b5add7a6, type: 3}
+  passiveSkill: {fileID: 11400000, guid: 2af88e2c84f24ef498043d4f833356ca, type: 2}
+  enhancedBuffEffect: {fileID: 0}
+  enhencedAttackType: 1
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 4
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: Necromancer Enhanced VFX
+  useEnhancedAOE: 1
+  aoeRadius: 2.5
+  aoeDamage: 0.8
+  cinematicBackdropColor: {r: 0.6301083, g: 0.2547169, b: 0.8490566, a: 0.56078434}
+  cinematicSpeedLineColor: {r: 1, g: 1, b: 1, a: 1}
+  hpGrowth: 10
+  damageGrowth: 2
+  armorGrowth: 0.5
+  rankMultiplierStep: 0.1
+  rankConfig:
+  - requiredItems:
+    - {fileID: 11400000, guid: 8c74097d493b1e04b91029d4d0b99754, type: 2}
+    - {fileID: 11400000, guid: 8cfb82736e58fc242b25f58871a8bcfd, type: 2}
+    - {fileID: 11400000, guid: 8bb5cf84f49c4904b90f2de59fbfe06e, type: 2}
+    - {fileID: 11400000, guid: 4fa8373748494a645af6bd9380d9c25c, type: 2}
+    - {fileID: 11400000, guid: 79d0404f055c80d4fa3d862f2b2528cf, type: 2}
+    - {fileID: 11400000, guid: a5bf3a336b2753f499536b5326170501, type: 2}
+    rankLevel: 1

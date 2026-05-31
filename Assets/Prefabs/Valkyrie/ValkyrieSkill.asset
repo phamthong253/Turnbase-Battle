@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9367ab7a8ee146a4299d6ff4bf95819f, type: 3}
+  m_Name: ValkyrieSkill
+  m_EditorClassIdentifier: 
+  skillName: XUNG PHONG !!
+  description: Armor Increase
+  damage: 0
+  manaCost: 100
+  cooldownTime: 10
+  aoeRadius: 0
+  summonPrefab: {fileID: 0}
+  summonDuration: 0
+  skillType: 4
+  targetType: 3
+  shieldAmount: 100
+  healAmount: 0
+  damageBonus: 0
+  buffDuration: 10
+  skillEffect: {fileID: 316776478079262399, guid: e0d7e95c4a4847b4380f91dc39007446, type: 3}
+  skillAnimationString: attackSkill
+  skillSound: {fileID: 8300000, guid: dcc07d401d119524e94c50f6b22322ed, type: 3}
+  skillTimeline: {fileID: 11400000, guid: cc6996c34415b3f47a3d618102243c9c, type: 2}
+  buffData: {fileID: 11400000, guid: de325b46fd5db3440be6127a41fb440d, type: 2}

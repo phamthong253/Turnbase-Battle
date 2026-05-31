@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c308cc33df4c5be4ab765a7feda52448, type: 3}
+  m_Name: DarkOracleSO
+  m_EditorClassIdentifier: 
+  unitID: 5
+  name: DarkOracle
+  hp: 100
+  maxHP: 100
+  mp: 100
+  maxMP: 100
+  armor: 25
+  damage: 15
+  magicDamage: 15
+  level: 99
+  attackCooldown: 2.5
+  attackType: 3
+  attackRange: 5
+  comboThreshold: 5
+  critChance: 10
+  avatar: {fileID: -6088419552408617394, guid: e66e42c469abfc44d92d0fed40222412, type: 3}
+  entireAvatar: {fileID: 8366473505960718593, guid: 0ed2b42b81ac068428bb667b8e5cf93b, type: 3}
+  projectilePrefab: {fileID: 6701866281983643091, guid: ebad5326c4b9c144db5248208a437024, type: 3}
+  hitVFXPrefab: {fileID: 2957842864923083962, guid: ace9fc22d4885204fad19db7b31cf379, type: 3}
+  passiveSkill: {fileID: 11400000, guid: 6795bc374c416a944a8697bccd753236, type: 2}
+  enhancedBuffEffect: {fileID: 11400000, guid: 260ed18eacb4531478151d305551f094, type: 2}
+  enhencedAttackType: 4
+  hasEnhancedAttack: 0
+  attackToTriggerEnhanced: 3
+  damageEnhencedMultiplier: 2
+  enhancedAttackVFXName: DarkOracle Enhanced VFX
+  useEnhancedAOE: 0
+  aoeRadius: 0
+  aoeDamage: 0
+  cinematicBackdropColor: {r: 0.12941177, g: 0.16862746, b: 0.22352943, a: 0.74509805}
+  cinematicSpeedLineColor: {r: 1, g: 0.93725497, b: 0.8078432, a: 1}
+  hpGrowth: 10
+  damageGrowth: 2
+  armorGrowth: 0.5
+  rankMultiplierStep: 0.1
+  rankConfig:
+  - requiredItems:
+    - {fileID: 11400000, guid: 8c74097d493b1e04b91029d4d0b99754, type: 2}
+    - {fileID: 11400000, guid: 8cfb82736e58fc242b25f58871a8bcfd, type: 2}
+    - {fileID: 11400000, guid: 8bb5cf84f49c4904b90f2de59fbfe06e, type: 2}
+    - {fileID: 11400000, guid: 4fa8373748494a645af6bd9380d9c25c, type: 2}
+    - {fileID: 11400000, guid: 79d0404f055c80d4fa3d862f2b2528cf, type: 2}
+    - {fileID: 11400000, guid: a5bf3a336b2753f499536b5326170501, type: 2}
+    rankLevel: 1
